@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kata Workflow"
+  short_description: "Use kata issues with Blue/Red workflows."
+  default_prompt: "Use kata to inspect, update, or close project issues."
