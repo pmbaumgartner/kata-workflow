@@ -183,8 +183,14 @@ Inline `--body "..."` is fine for one-line edits.
 
 Do not pipe full JSON to `head`; it can truncate mid-field. Project the fields you need.
 
+In `kata show --json`, relationships live at the top level, not under `.issue`. `.issue` carries only scalar fields. Project from the real paths:
+
 ```bash
-kata show <ref> --json | jq '{title:.issue.title, status:.issue.status, parent:.issue.parent, blocks:.issue.blocks, blocked_by:.issue.blocked_by, body:.issue.body}'
+kata show <ref> --json | jq '{
+  title:.issue.title, status:.issue.status, body:.issue.body,
+  parent:.parent.short_id,
+  links:[.links[]? | {type, from:.from.short_id, to:.to.short_id}]
+}'
 ```
 
 Use the right wrapper key:
