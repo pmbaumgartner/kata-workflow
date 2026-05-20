@@ -1,4 +1,4 @@
 interface:
   display_name: "Kata Workflow"
-  short_description: "Use kata issues with Blue/Red workflows."
-  default_prompt: "Use kata to inspect, update, or close project issues."
+  short_description: "Manage kata issues and plan breakdowns."
+  default_prompt: "Use $kata-workflow to inspect, create, update, link, or close kata issues."

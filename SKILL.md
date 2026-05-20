@@ -1,6 +1,6 @@
 ---
 name: kata-workflow
-description: Use when an agent needs to inspect, create, update, triage, choose next work from, or close kata issues; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
+description: Use when an agent needs to inspect, create, update, triage, choose next work from, close kata issues, or translate markdown plans into linked kata issue sets; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
 ---
 
 # Kata Workflow
@@ -124,6 +124,12 @@ For Blue work, read [references/blue.md](references/blue.md).
 For Red work, read [references/red.md](references/red.md).
 
 When Red work hits unexpected uncertainty, stop and open or update a Blue issue rather than pushing through.
+
+## Plan Markdown To Issues
+
+When translating a large markdown plan, or several smaller plan documents, into kata issues, read [references/plan-to-issues.md](references/plan-to-issues.md).
+
+Use the robust flow: coordinator draft, pre-mortem plus modularity review, parallel unlinked creation, central linking, drift reconciliation, fidelity review.
 
 ## What's Next
 
