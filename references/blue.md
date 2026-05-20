@@ -53,13 +53,16 @@ Do not rush to a final recommendation in the first draft.
 
 1. Read the issue body, parent, links, and existing docs.
 2. Draft the decision frame at the artifact path.
-3. Pause for human frame-check: higher-level goal, criteria, and hypotheses.
+3. Pause and ask for a user frame-check: higher-level goal, criteria, and hypotheses.
+  - Iterate with the user until they confirm proceeding to the next step.
 4. Diverge: explore plausible options, including likely losers.
 5. Converge: gather evidence and rank options against the criteria.
 6. Keep `## Open questions` ordered by what blocks the decision. Minibatch 1-3 human questions from the top; use discrete user-input tooling when it fits.
+  - Iterate with the user on exploring the open questions.
 7. Before signoff, ask what would make the recommendation wrong.
 8. Ask for explicit decision-owner signoff.
-9. Finalize the artifact, commit it, then close.
+9. Create necessary follow up issues.
+10. Finalize the artifact, then close and mark as reviewed,
 
 Fast path: for small "Choosing between known options" issues, one frame-check and one evidence pass may be enough.
 
@@ -90,8 +93,8 @@ Blue closure must include:
 
 - brief `--message` naming the settled decision
 - explicit decision-owner signoff in the artifact or a short kata comment
-- `--commit <sha>` for the commit containing the final artifact
 - `--reviewed <path>` for the decision artifact
+- `--commit <sha>` when there is a relevant commit, but do not require one just to close Blue work
 - follow-up issues listed in the artifact, if opened
 - rejected or deferred options recorded in the artifact
 
@@ -100,7 +103,6 @@ Example:
 ```bash
 kata close abc4 --done \
   --message "Decided to keep match-based ANN dispatch." \
-  --commit <sha> \
   --reviewed docs/ann_abstraction_decision.md
 ```
 
