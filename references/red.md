@@ -27,7 +27,8 @@ Pause trigger examples: loss does not converge after repeated runs, data schema 
 3. Implement the smallest change that satisfies acceptance criteria.
 4. Run focused checks while developing.
 5. Run the issue's required verification before close.
-6. If unexpected uncertainty changes the decision, stop and open or update a Blue issue.
+6. Commit the completed work before close, unless the user explicitly declares that no commit is required.
+7. If unexpected uncertainty changes the decision, stop and open or update a Blue issue.
 
 ## Performance Work
 
@@ -44,15 +45,20 @@ For any Red issue that claims a performance improvement, optimization, fewer syn
 Red closure must include:
 
 - brief `--message` naming what changed
+- committed work, unless the user explicitly declared otherwise
+- `--commit <sha>` for the commit containing the completed work, unless the user explicitly declared otherwise
 - `--test "<cmd>"` for each verification command that passed
 - skipped or unavailable checks documented in reviewed docs/artifacts when they
   affect future work
-- `--commit <sha>` or `--pr <url>` when available
 - `--reviewed <path>` for every deliverable path
 - residual risk or deferred follow-up documented in reviewed docs/artifacts
 
 If the issue has no doc/artifact deliverable, record skipped checks, residual
 risk, or deferred follow-up in a short kata comment before closing.
+
+If the user declares that no commit is required, record that exception in a
+short kata comment or the close message. Do not treat a PR URL as a substitute
+for `--commit` unless the user explicitly accepts that exception.
 
 Example:
 
