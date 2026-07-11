@@ -14,7 +14,7 @@ Use this workflow when translating a large markdown plan, or several smaller pla
 2. Pre-mortem and modularity review:
    - Before creating issues, assume the issue set failed to deliver the source plan. Name concrete causes.
    - Look for missing issues, oversized issues, hidden dependencies, vague acceptance evidence, unverified code assumptions, missing migrations, missing rollback/observability/tests, and decisions buried inside Red work.
-   - Convert each material risk into an issue split, issue edit, relationship candidate, new Blue issue, or user question.
+   - Convert each material risk into an issue split, issue edit, relationship candidate, new Blue issue, or decision. Ask the user in Human mode; decide and record assumptions in Agent mode.
    - Apply the Lego rule: prefer small, repeatable, independently verified ship units.
    - Favor vertical slices over layer-only tasks. For each Red issue ask: smallest useful ship unit, independent verification, stable interface, and whether later work can repeat the pattern.
 
@@ -39,7 +39,7 @@ Use this workflow when translating a large markdown plan, or several smaller pla
    - If the issue is stale, contradicted, or underspecified, comment or edit before implementation. Do not silently work around stale scope.
    - If implementation discovers a durable constraint, record it in acceptance evidence, a deliverable doc, or a Blue issue.
    - If a bug or test failure reveals a missing invariant, use a backprop-style loop: trace root cause, decide whether a reusable invariant or acceptance check would catch recurrence, then fix. Follow project testing policy; add a regression test only when the behavior remains part of the intended contract, and use an explicit evidence expectation when a test would preserve removed behavior or merely test a language or third-party guarantee.
-   - Distinguish source-plan drift, codebase drift, and useful scope additions. Surface unresolved calls to the user.
+   - Distinguish source-plan drift, codebase drift, and useful scope additions. Surface unresolved calls to the user in Human mode; resolve them with documented assumptions in Agent mode.
 
 6. Fidelity review:
    - Reconcile the source coverage map against the final issue set and relationship graph.
@@ -47,8 +47,8 @@ Use this workflow when translating a large markdown plan, or several smaller pla
    - Verify every substantive source-plan requirement is represented by a kata issue, explicitly folded into another issue, or intentionally left out with a noted reason.
    - Verify source-plan dependencies became `blocks` / `blocked_by` links when they affect readiness.
    - Verify deliverables, acceptance checks, and evidence expectations were not lost.
-   - Verify pre-mortem risks and drift findings were either handled or carried as explicit open questions.
-   - Review additions from issue creation. Keep useful repo-grounded additions, but surface speculative additions or unresolved scope questions to the user.
+   - Verify pre-mortem risks and drift findings were handled. Carry unresolved items as explicit questions in Human mode and as documented assumptions or deferred issues in Agent mode.
+   - Review additions from issue creation. Keep useful repo-grounded additions. In Human mode, surface speculative additions or unresolved scope questions to the user; in Agent mode, decide or document an assumption.
    - If fidelity is incomplete, edit issues or create missing ones before reporting completion.
 
-Final response: list the created/reused refs, major links added, coverage/fidelity result, handled pre-mortem/drift findings, additions, and user decisions still needed.
+Final response: list the created/reused refs, major links added, coverage/fidelity result, handled pre-mortem/drift findings, and additions. In Human mode, include user decisions still needed. In Agent mode, include decisions made, material assumptions, confidence, and reversal paths.

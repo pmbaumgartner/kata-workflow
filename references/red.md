@@ -40,7 +40,7 @@ For any Red issue that claims a performance improvement, optimization, fewer syn
 - Record the baseline command, dataset or shape, seed, metric, and result.
 - After implementation, run the same benchmark against the changed code.
 - Do not call the change an improvement unless same-harness before/after results show it.
-- If the benchmark is slower or inconclusive, let the user know and ask them to decide whether to revert the attempted change and record the result before closing or handing back.
+- If the benchmark is slower or inconclusive, record the result. In Human mode, ask the user whether to revert before closing or handing back. In Agent mode, choose the smallest reversible outcome that best serves the goal, record the choice, and continue without waiting.
 
 ## Close-Out
 

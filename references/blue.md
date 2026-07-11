@@ -3,6 +3,14 @@
 Blue issues are decision and discovery work. Their output is "we know enough to
 act," not shipped code.
 
+## Contents
+
+- Issue Body
+- Decision Frame
+- Workflow
+- Final Artifact
+- Close-Out
+
 ## Issue Body
 
 Use label `blue`. Start the title with one of the Blue verbs listed in SKILL.md; do not add a `[Blue]` prefix.
@@ -11,6 +19,7 @@ Examples: `Decide whether to retain ANN dispatch`, `Investigate Safari callback 
 
 Required fields:
 
+- `## Decision Mode` - `Human`, or `Agent` with the inherited authority source; omitted means Human
 - `## Question` - the decision or unknown to resolve
 - `## Context` - selected context, not a full history
 - `## Predictability` - one of:
@@ -21,7 +30,7 @@ Required fields:
 - `## Exit Criteria` - what makes the decision settled
 - `## Deliverables` - include the decision artifact path
 
-Use the decision owner named by the issue or project. Default to the current user when neither names one.
+In Human mode, use the decision owner named by the issue or project and default to the current user. In Agent mode, the primary agent is the decision owner; other agents may advise or review but do not sign off.
 Prefer `docs/<slug>.md` for decision artifacts unless the project has another
 convention.
 
@@ -55,26 +64,28 @@ Do not rush to a final recommendation in the first draft.
 
 1. Read the issue body, parent, links, and existing docs.
 2. Draft the decision frame at the artifact path.
-3. Pause and ask the decision owner for a frame-check: higher-level goal, criteria, and hypotheses.
-   - Iterate with the decision owner until they confirm proceeding to the next step.
+3. Frame-check the higher-level goal, criteria, and hypotheses.
+   - In Human mode, pause and iterate with the decision owner until they confirm proceeding.
+   - In Agent mode, audit the frame against the delegated goal and continue without pausing.
 4. Diverge: explore plausible options, including likely losers.
 5. Converge: gather evidence and rank options against the criteria.
-6. Keep `## Open questions` ordered by what blocks the decision. Minibatch 1-3 human questions from the top; use discrete user-input tooling when it fits.
-   - Iterate with the relevant participants on exploring the open questions.
+6. Keep `## Open questions` ordered by what blocks the decision.
+   - In Human mode, minibatch 1-3 questions from the top and iterate with the relevant participants.
+   - In Agent mode, resolve questions through evidence or documented assumptions; do not send them to the human for approval.
 7. Before signoff, ask what would make the recommendation wrong.
-8. Ask for explicit decision-owner signoff.
+8. Record explicit decision-owner signoff. Human mode requires the human owner's response; Agent mode uses the signoff defined in agent-mode.md.
 9. Create necessary follow up issues.
 10. Finalize the artifact, then close and mark it as reviewed.
 
 Fast path: for small "Choosing between known options" issues, one frame-check and one evidence pass may be enough.
 
-For "Probing the unknown" issues, do at least one human checkpoint before the doc contains a final recommendation.
+For "Probing the unknown" issues in Human mode, do at least one human checkpoint before the doc contains a final recommendation. In Agent mode, do an adversarial review instead.
 
-Do not substitute another participant's agreement for the named decision owner's signoff.
+Do not substitute another participant's agreement for the named decision owner's signoff. In Agent mode, advice or review from another agent does not replace primary-agent signoff.
 
 ## Final Artifact
 
-After evidence and human calibration, convert the decision frame into the final artifact:
+After evidence and mode-appropriate calibration, convert the decision frame into the final artifact:
 
 ```md
 **Finding:** 1-3 sentences.
@@ -109,4 +120,4 @@ kata close abc4 --done \
   --agent
 ```
 
-Agreement to start work is not signoff.
+In Human mode, agreement to start work is not signoff.

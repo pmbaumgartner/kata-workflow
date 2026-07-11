@@ -1,6 +1,6 @@
 ---
 name: kata-workflow
-description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose next work from, close kata issues, or translate markdown plans into linked kata issue sets; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
+description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose next work from, close kata issues, translate markdown plans into linked kata issue sets, or run autonomous reversible work with agent-owned decisions; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
 ---
 
 # Kata Workflow
@@ -10,7 +10,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 ## First Moves
 
 - Run `kata quickstart` when entering an unfamiliar kata workspace or after a kata upgrade.
-- Use `kata ready --unowned --agent` when asked what new work to take next, then `kata claim <ref> --agent` after the user chooses it. Use an owner filter instead when resuming assigned work.
+- Use `kata ready --unowned --agent` when asked what new work to take next. In Human mode, claim after the user chooses; in Agent mode, choose and claim without waiting. Use an owner filter instead when resuming assigned work.
 - Use `kata list --status all --agent`, `kata show <ref> --agent`, and `kata search "<term>" --agent` to orient.
 - Do not `delete` or `purge` unless the user explicitly asks for that exact destructive action and ref.
 - Keep local scratch state such as `.scratch/` untracked and out of code indexes unless the project explicitly says otherwise.
@@ -20,7 +20,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 - Do not false-close. Closing asserts the work is verified.
 - If work is incomplete, leave it open, add `needs-review` if useful, and comment with what was attempted and what remains.
 - Close verified Red work promptly.
-- Close Blue work only after explicit signoff from the named decision owner. Default to the current user when the issue or project names no decision owner.
+- Close Blue work only after explicit signoff from the mode's decision owner: the named human or current user in Human mode, and the primary agent in Agent mode.
 - Use `blocks` / `blocked_by` for real sequencing. Use `related` only for context.
 - Give every issue exactly one canonical workflow label: `blue` or `red`. Titles make the type visible but do not replace the label.
 - Search before creating. Always pass `--idempotency-key <slug>-<YYYY-MM-DD>` on `kata create`.
@@ -28,6 +28,19 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 - Every artifact-producing issue needs a `## Deliverables` block.
 - Every deliverable path must be reviewed before close.
 - Keep close `--message` brief but substantive. Put durable detail in reviewed docs/artifacts, typed evidence, or a short kata comment when no artifact exists.
+
+## Decision Modes
+
+Use exactly one decision mode for a goal or root issue:
+
+- Human mode is the default. The current user owns frame checks, unresolved questions, and Blue signoff.
+- Agent mode requires explicit user delegation for reversible, non-production work. The primary agent owns decisions, records signoff, closes Blue issues, and reports decisions at the end without waiting for human checkpoints.
+
+Record Agent mode and its authority source in the root issue or a reviewed project policy. Child issues inherit that mode unless the user explicitly changes it. Activating a Goal alone does not select Agent mode or expand action permissions.
+
+In Agent mode, resolve uncertainty with proportionate evidence and documented assumptions. Prefer the smallest, simplest, easiest-to-reverse choice when evidence is close. Defer nonessential branches to follow-up issues and continue other ready work. Only an environmental impossibility or unavailable required authority may stop the goal; ambiguity, competing designs, and low confidence do not.
+
+For Agent mode, read [references/agent-mode.md](references/agent-mode.md).
 
 ## Refs And Invocation
 
@@ -177,7 +190,9 @@ When the user asks what to work on next:
 2. Inspect unfamiliar structure with `kata show <root-ref> --agent`.
 3. Prefer upstream feeders and work without a stakeholder loop.
 4. Treat both Blue and Red results as eligible. If a Red issue still needs a Blue decision, fix the missing relationship instead of relying on type preference.
-5. Recommend one issue and the tradeoff in 1-3 sentences. Do not claim or start it until the user agrees.
+5. Recommend one issue and the tradeoff in 1-3 sentences.
+   - In Human mode, do not claim or start until the user agrees.
+   - In Agent mode, record the choice and tradeoff, then claim and start without waiting.
 
 
 ## Where Things Live
