@@ -5,7 +5,9 @@ act," not shipped code.
 
 ## Issue Body
 
-Use title prefix `[Blue]` and label `blue`.
+Use label `blue`. Start the title with one of the Blue verbs listed in SKILL.md; do not add a `[Blue]` prefix.
+
+Examples: `Decide whether to retain ANN dispatch`, `Investigate Safari callback duplication`, `Compare vector-index options`.
 
 Required fields:
 
@@ -103,7 +105,8 @@ Example:
 ```bash
 kata close abc4 --done \
   --message "Decided to keep match-based ANN dispatch." \
-  --reviewed docs/ann_abstraction_decision.md
+  --reviewed docs/ann_abstraction_decision.md \
+  --agent
 ```
 
 Agreement to start work is not signoff.

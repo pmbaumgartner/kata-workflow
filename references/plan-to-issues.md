@@ -7,7 +7,7 @@ Use this workflow when translating a large markdown plan, or several smaller pla
 1. Coordinator draft:
    - Read every source plan first.
    - Identify outcomes, phases, dependencies, deliverables, unresolved decisions, acceptance evidence, and likely repo areas.
-   - Decide the provisional issue graph before creating anything. Split mixed thinking/doing into separate Blue and Red issues.
+   - Decide the provisional issue graph before creating anything. Split mixed thinking/doing into separate Blue and Red issues. Give each exactly one `blue` or `red` label and start its title with the corresponding verb family from SKILL.md.
    - Build a source coverage map from plan headings, bullets, checklist items, or requirement IDs to planned issue titles.
    - Search existing kata issues before creation and reuse/update obvious matches instead of duplicating them.
 
@@ -25,7 +25,7 @@ Use this workflow when translating a large markdown plan, or several smaller pla
    - Each issue body must preserve provenance with a short `## Source Plan` block naming the file(s) and section(s) covered.
    - Each artifact-producing issue still needs a `## Deliverables` block.
    - Subagents may add necessary detail from repo/code context, but must report additions separately from source-plan content.
-   - Each subagent reports: created/reused kata ref, title, Blue/Red classification, source sections covered, likely `blocks` / `blocked_by` / `related` candidates, additions, and open questions.
+   - Each subagent reports: created/reused kata ref, title, Blue/Red label, source sections covered, likely `blocks` / `blocked_by` / `related` candidates, additions, and open questions.
 
 4. Central linking:
    - Inspect subagent reports and `kata show <ref> --json` for each created/reused issue.
@@ -43,6 +43,7 @@ Use this workflow when translating a large markdown plan, or several smaller pla
 
 6. Fidelity review:
    - Reconcile the source coverage map against the final issue set and relationship graph.
+   - Verify every issue has exactly one `blue` or `red` label and a matching opening verb.
    - Verify every substantive source-plan requirement is represented by a kata issue, explicitly folded into another issue, or intentionally left out with a noted reason.
    - Verify source-plan dependencies became `blocks` / `blocked_by` links when they affect readiness.
    - Verify deliverables, acceptance checks, and evidence expectations were not lost.

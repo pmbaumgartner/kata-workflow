@@ -4,7 +4,9 @@ Red issues are implementation work. Their output is shipped, verified change.
 
 ## Issue Body
 
-Use title prefix `[Red]` and label `red`.
+Use label `red`. Start the title with one of the Red verbs listed in SKILL.md; do not add a `[Red]` prefix.
+
+Examples: `Fix Safari callback duplication`, `Add ANN recall gates`, `Migrate legacy issue references`.
 
 Required fields:
 
@@ -69,7 +71,8 @@ kata close abc4 --done \
   --test "cargo test" \
   --test "uv run pytest" \
   --reviewed tests/test_ann_recall.py \
-  --reviewed examples/ann_benchmark.rs
+  --reviewed examples/ann_benchmark.rs \
+  --agent
 ```
 
 Do not close if verification did not run and no accepted rationale is recorded.
