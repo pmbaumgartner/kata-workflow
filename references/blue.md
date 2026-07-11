@@ -8,7 +8,7 @@ act," not shipped code.
 - Issue Body
 - Decision Frame
 - Workflow
-- Final Artifact
+- Final Record
 - Close-Out
 
 ## Issue Body
@@ -22,23 +22,23 @@ Required fields:
 - `## Decision Mode` - `Human`, or `Agent` with the inherited authority source; omitted means Human
 - `## Question` - the decision or unknown to resolve
 - `## Context` - selected context, not a full history
-- `## Predictability` - one of:
-  - `Choosing between known options`
-  - `Probing the unknown`
+- `## Decision Stakes` - consequence, reversibility, and uncertainty; use these to scale evidence and ceremony
 - `## Approach` - how to investigate
-- `## Decision Artifact` - path such as `docs/<slug>.md`
 - `## Exit Criteria` - what makes the decision settled
-- `## Deliverables` - include the decision artifact path
+
+Use one of two recording scales:
+
+- Inline Blue - for a small, reversible decision local to one issue. Record the frame, evidence, recommendation, and signoff in the issue body or a short comment. A separate artifact and `## Deliverables` block are not required.
+- Artifact Blue - for a decision that is expensive to reverse, affects multiple issues, establishes reusable policy, or needs durable evidence beyond the issue record. Add `## Decision Artifact` and `## Deliverables` fields and use a repo document such as `docs/<slug>.md`.
 
 In Human mode, use the decision owner named by the issue or project and default to the current user. In Agent mode, the primary agent is the decision owner; other agents may advise or review but do not sign off.
-Prefer `docs/<slug>.md` for decision artifacts unless the project has another
-convention.
+Prefer `docs/<slug>.md` for Artifact Blue unless the project has another convention.
 
 ## Decision Frame
 
-The first draft is an outline with selected context, not the answer. Use it to check whether the original issue still points at the right higher-level goal.
+The first draft is an outline with selected context, not the answer. Use it to check whether the original issue still points at the right higher-level goal. For Inline Blue, the required issue fields may serve as this frame; do not create a document merely to reproduce them.
 
-Initial doc shape:
+Artifact Blue doc shape:
 
 ```md
 ---
@@ -63,29 +63,29 @@ Do not rush to a final recommendation in the first draft.
 ## Workflow
 
 1. Read the issue body, parent, links, and existing docs.
-2. Draft the decision frame at the artifact path.
+2. Draft the decision frame in the issue for Inline Blue or at the artifact path for Artifact Blue.
 3. Frame-check the higher-level goal, criteria, and hypotheses.
    - In Human mode, pause and iterate with the decision owner until they confirm proceeding.
    - In Agent mode, audit the frame against the delegated goal and continue without pausing.
-4. Diverge: explore plausible options, including likely losers.
+4. Diverge: explore plausible options in proportion to the stakes; include likely losers when they could materially challenge the recommendation.
 5. Converge: gather evidence and rank options against the criteria.
 6. Keep `## Open questions` ordered by what blocks the decision.
    - In Human mode, minibatch 1-3 questions from the top and iterate with the relevant participants.
    - In Agent mode, resolve questions through evidence or documented assumptions; do not send them to the human for approval.
 7. Before signoff, ask what would make the recommendation wrong.
-8. Record explicit decision-owner signoff. Human mode requires the human owner's response; Agent mode uses the signoff defined in agent-mode.md.
+8. Record explicit decision-owner signoff in the selected issue or artifact location. Human mode requires the human owner's response; Agent mode uses the signoff defined in agent-mode.md.
 9. Create necessary follow up issues.
-10. Finalize the artifact, then close and mark it as reviewed.
+10. Finalize the decision record. For Artifact Blue, mark the artifact as reviewed, then close.
 
-Fast path: for small "Choosing between known options" issues, one frame-check and one evidence pass may be enough.
+Fast path: for low-consequence, easily reversible Inline Blue issues, one frame-check and one proportionate evidence pass may be enough.
 
-For "Probing the unknown" issues in Human mode, do at least one human checkpoint before the doc contains a final recommendation. In Agent mode, do an adversarial review instead.
+When uncertainty or consequence is high, Human mode requires at least one human checkpoint before the decision record contains a final recommendation. Agent mode requires an adversarial review instead.
 
 Do not substitute another participant's agreement for the named decision owner's signoff. In Agent mode, advice or review from another agent does not replace primary-agent signoff.
 
-## Final Artifact
+## Final Record
 
-After evidence and mode-appropriate calibration, convert the decision frame into the final artifact:
+After evidence and mode-appropriate calibration, convert the frame into the final issue record or artifact:
 
 ```md
 **Finding:** 1-3 sentences.
@@ -96,6 +96,8 @@ After evidence and mode-appropriate calibration, convert the decision frame into
 **Dead ends:** What did not work, so nobody repeats it.
 ```
 
+For Inline Blue, keep only the fields needed to make the decision legible; record rejected alternatives and dead ends only when material.
+
 Remove `## Open questions` before close, unless the final decision is explicitly to defer and the remaining questions are part of that outcome.
 
 If a question needs new investigation, open a child Blue issue and mark the current issue `--blocked-by` it rather than stalling.
@@ -105,11 +107,11 @@ If a question needs new investigation, open a child Blue issue and mark the curr
 Blue closure must include:
 
 - brief `--message` naming the settled decision
-- explicit decision-owner signoff in the artifact or a short kata comment
-- `--reviewed <path>` for the decision artifact
+- explicit decision-owner signoff in the issue, artifact, or a short kata comment
+- `--reviewed <path>` for Artifact Blue; omit it for Inline Blue unless another deliverable exists
 - `--commit <sha>` when there is a relevant commit, but do not require one just to close Blue work
-- follow-up issues listed in the artifact, if opened
-- rejected or deferred options recorded in the artifact
+- follow-up issues listed in the decision record, if opened
+- material rejected or deferred options recorded in the decision record
 
 Example:
 

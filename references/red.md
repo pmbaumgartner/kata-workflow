@@ -22,6 +22,8 @@ unambiguous.
 
 Pause trigger examples: loss does not converge after repeated runs, data schema differs from Blue assumptions, or the implementation would require changing the settled product decision.
 
+Red work still permits local implementation judgment. Do not open Blue merely to choose among equivalent local techniques that leave scope, acceptance criteria, settled decisions, and reusable policy unchanged.
+
 ## Workflow
 
 1. Read the issue body and linked decision docs.
@@ -30,7 +32,10 @@ Pause trigger examples: loss does not converge after repeated runs, data schema 
 4. Run focused checks while developing.
 5. Run the issue's required verification before close.
 6. Commit the completed work before close, unless the user explicitly declares that no commit is required.
-7. If unexpected uncertainty changes the decision, stop and open or update a Blue issue.
+7. If uncertainty would change scope, acceptance criteria, a settled decision, or a reusable policy, stop and open or update a Blue issue.
+8. Before close, consider whether execution produced reusable learning, exposed a faulty assumption, or suggests changing future decisions or process. If so, record it in a linked Blue issue; otherwise close without retrospective ceremony.
+
+The learning review does not block Red closure unless it invalidates acceptance or verification. A follow-up Blue issue is sufficient when the Red change remains complete.
 
 ## Performance Work
 

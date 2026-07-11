@@ -44,19 +44,19 @@ A Goal supplies persistence and an objective, not decision authority. Do not inf
 - Prefer an experiment or narrow vertical slice when it can cheaply replace speculation.
 - Use independent agents for investigation or adversarial review when useful, but keep final ownership with the primary agent.
 - Defer nonessential uncertainty to a linked follow-up issue and continue other ready work.
-- Preserve detailed decisions in Blue artifacts and give the human a compact report at the end.
+- Preserve detailed decisions in the selected Blue issue record or artifact and give the human a compact report at the end.
 
 Agent mode changes decision ownership, not action permissions. Do not treat it as authority for production deployment, destructive operations, external communication, spending, or other actions outside the user's granted scope. If a skipped unauthorized action is nonessential, record it and continue. If the goal is impossible without unavailable authority or an environmental dependency, report the genuine blocker with evidence.
 
 ## Decision Workflow
 
-1. Draft the decision frame.
+1. Draft the decision frame in the issue or artifact selected by the Blue workflow.
 2. Audit the frame against the goal, parent issue, and authority source.
 3. Explore plausible alternatives and gather evidence.
 4. Rank options against the stated criteria.
 5. Run an adversarial review: identify the strongest objection, missing option, and evidence that would reverse the recommendation.
 6. Choose without waiting for human input.
-7. Record signoff in the decision artifact.
+7. Record signoff in the decision record.
 8. Create necessary follow-up issues, close the Blue issue, and continue with ready work.
 
 Low confidence does not block a decision. Record the uncertainty and choose the easiest-to-reverse path. Reopen or supersede the decision later if new evidence invalidates it.
@@ -67,20 +67,14 @@ Low confidence does not block a decision. Record the uncertainty and choose the 
 ## Decision Signoff
 
 **Mode:** Agent
-**Decision owner:** Primary agent
 **Authority:** Inherited from <root-ref or policy path>
 **Decision:** <choice>
-**Goal alignment:** <how the choice advances the goal>
-**Evidence:** <commands, artifacts, findings>
-**Assumptions:** <unresolved facts accepted for this decision>
-**Rejected alternatives:** <options and why they lost>
-**Adversarial review:** <strongest objection and response>
 **Confidence:** High | Medium | Low
+**Material assumptions:** <unresolved facts accepted for this decision, or none>
 **Reversal:** <how to undo or supersede the decision>
-**Approved for follow-up work:** Yes
 ```
 
-Close the Blue issue after the signoff and artifact review. Closure means the delegated decision was made, documented, and checked; it does not claim later human endorsement.
+Keep goal alignment, evidence, rejected alternatives, and adversarial review in the decision record rather than duplicating them in signoff. Close the Blue issue after signoff and any required artifact review. Closure means the delegated decision was made, documented, and checked; it does not claim later human endorsement.
 
 ## Continuous Goal Loop
 

@@ -155,10 +155,10 @@ For a long-running or multi-agent session, poll `kata events --after <cursor> --
 
 Every issue is either:
 
-- Blue: thinking work. Outputs decisions, findings, recommendations.
-- Red: doing work. Outputs code, models, features, pipelines.
+- Blue: decision and discovery work. Outputs settled knowledge: decisions, findings, recommendations.
+- Red: implementation work. Outputs verified changes: code, models, features, pipelines.
 
-Blue variability is useful; Red variability is a cost to minimize.
+Blue increases option and perspective variability. Red minimizes goal and scope variability while preserving local implementation judgment and anomaly reporting.
 
 Use the label as the canonical type and start the title with a type-specific verb so the type remains visible in the TUI and `ready --agent` output:
 
@@ -169,12 +169,12 @@ Use the label as the canonical type and start the title with a type-specific ver
 
 Do not add `[Blue]` or `[Red]` prefixes. Avoid vague openings such as `Improve`, `Handle`, `Support`, `Review`, `Design`, or `Work on`; rewrite the title to expose whether the issue settles knowledge or ships a change. The verb is a human cue, not a substitute for checking the label.
 
-No purple work: split mixed work into separate Blue and Red issues.
+No purple work: classify each issue by its completion claim. Split mixed work when it has distinct durable decision and implementation outputs; do not create a separate Blue issue for ordinary local implementation judgment inside Red work.
 
 For Blue work, read [references/blue.md](references/blue.md).
 For Red work, read [references/red.md](references/red.md).
 
-When Red work hits unexpected uncertainty, stop and open or update a Blue issue rather than pushing through.
+When Red work exposes uncertainty that would change scope, acceptance criteria, a settled decision, or a reusable policy, stop and open or update a Blue issue rather than silently improvising. After Red work, open or update Blue only when execution produced reusable learning, exposed a faulty assumption, or suggests changing future decisions or process.
 
 ## Plan Markdown To Issues
 

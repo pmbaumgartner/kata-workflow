@@ -7,13 +7,13 @@ Use this workflow when translating a large markdown plan, or several smaller pla
 1. Coordinator draft:
    - Read every source plan first.
    - Identify outcomes, phases, dependencies, deliverables, unresolved decisions, acceptance evidence, and likely repo areas.
-   - Decide the provisional issue graph before creating anything. Split mixed thinking/doing into separate Blue and Red issues. Give each exactly one `blue` or `red` label and start its title with the corresponding verb family from SKILL.md.
+   - Decide the provisional issue graph before creating anything. Classify each issue by its completion claim. Split thinking and doing only when they have distinct durable decision and implementation outputs; keep ordinary local implementation judgment inside Red work. Give each issue exactly one `blue` or `red` label and start its title with the corresponding verb family from SKILL.md.
    - Build a source coverage map from plan headings, bullets, checklist items, or requirement IDs to planned issue titles.
    - Search existing kata issues before creation and reuse/update obvious matches instead of duplicating them.
 
 2. Pre-mortem and modularity review:
    - Before creating issues, assume the issue set failed to deliver the source plan. Name concrete causes.
-   - Look for missing issues, oversized issues, hidden dependencies, vague acceptance evidence, unverified code assumptions, missing migrations, missing rollback/observability/tests, and decisions buried inside Red work.
+   - Look for missing issues, oversized issues, hidden dependencies, vague acceptance evidence, unverified code assumptions, missing migrations, missing rollback/observability/tests, and material scope, acceptance, policy, or settled-decision changes buried inside Red work.
    - Convert each material risk into an issue split, issue edit, relationship candidate, new Blue issue, or decision. Ask the user in Human mode; decide and record assumptions in Agent mode.
    - Apply the Lego rule: prefer small, repeatable, independently verified ship units.
    - Favor vertical slices over layer-only tasks. For each Red issue ask: smallest useful ship unit, independent verification, stable interface, and whether later work can repeat the pattern.
