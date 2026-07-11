@@ -20,7 +20,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 - Do not false-close. Closing asserts the work is verified.
 - If work is incomplete, leave it open, add `needs-review` if useful, and comment with what was attempted and what remains.
 - Close verified Red work promptly.
-- Close Blue work only after explicit user decision-owner signoff.
+- Close Blue work only after explicit signoff from the named decision owner. Default to the current user when the issue or project names no decision owner.
 - Use `blocks` / `blocked_by` for real sequencing. Use `related` only for context.
 - Give every issue exactly one canonical workflow label: `blue` or `red`. Titles make the type visible but do not replace the label.
 - Search before creating. Always pass `--idempotency-key <slug>-<YYYY-MM-DD>` on `kata create`.
@@ -83,15 +83,17 @@ Do not invent evidence prefixes such as `sanity-check:` or `smoke-test:`. Put ma
 
 Every path under `## Deliverables` becomes a `--reviewed <path>` flag. If a deliverable does not get reviewed, either the work is not done or the issue body should be edited before close.
 
+Verify that commit evidence contains the completed work before closing. Do not use the current `HEAD` merely because it is convenient.
+
 Example:
 
 ```bash
 kata close abc4 --done --message "Fixed Safari callback double-submit." \
-  --commit "$(git rev-parse HEAD)" --test "cargo test" --dry-run --agent
+  --commit <sha-containing-completed-work> --test "cargo test" --dry-run --agent
 
 kata close abc4 --done \
   --message "Fixed Safari callback double-submit." \
-  --commit "$(git rev-parse HEAD)" \
+  --commit <sha-containing-completed-work> \
   --test "cargo test" \
   --test "uv run pytest" \
   --reviewed docs/corpus_profile.md \
@@ -165,7 +167,7 @@ When Red work hits unexpected uncertainty, stop and open or update a Blue issue 
 
 When translating a large markdown plan, or several smaller plan documents, into kata issues, read [references/plan-to-issues.md](references/plan-to-issues.md).
 
-Use the robust flow: coordinator draft, pre-mortem plus modularity review, parallel unlinked creation, central linking, drift reconciliation, fidelity review.
+Use the robust flow: coordinator draft, pre-mortem plus modularity review, unlinked creation, central linking, drift reconciliation, fidelity review. Create issues in parallel when independent agents are available and the coordination overhead is justified; otherwise use the same flow sequentially.
 
 ## What's Next
 

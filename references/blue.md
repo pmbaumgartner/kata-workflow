@@ -21,7 +21,7 @@ Required fields:
 - `## Exit Criteria` - what makes the decision settled
 - `## Deliverables` - include the decision artifact path
 
-The user is the decision owner unless the issue or project says otherwise.
+Use the decision owner named by the issue or project. Default to the current user when neither names one.
 Prefer `docs/<slug>.md` for decision artifacts unless the project has another
 convention.
 
@@ -55,22 +55,22 @@ Do not rush to a final recommendation in the first draft.
 
 1. Read the issue body, parent, links, and existing docs.
 2. Draft the decision frame at the artifact path.
-3. Pause and ask for a user frame-check: higher-level goal, criteria, and hypotheses.
-  - Iterate with the user until they confirm proceeding to the next step.
+3. Pause and ask the decision owner for a frame-check: higher-level goal, criteria, and hypotheses.
+   - Iterate with the decision owner until they confirm proceeding to the next step.
 4. Diverge: explore plausible options, including likely losers.
 5. Converge: gather evidence and rank options against the criteria.
 6. Keep `## Open questions` ordered by what blocks the decision. Minibatch 1-3 human questions from the top; use discrete user-input tooling when it fits.
-  - Iterate with the user on exploring the open questions.
+   - Iterate with the relevant participants on exploring the open questions.
 7. Before signoff, ask what would make the recommendation wrong.
 8. Ask for explicit decision-owner signoff.
 9. Create necessary follow up issues.
-10. Finalize the artifact, then close and mark as reviewed,
+10. Finalize the artifact, then close and mark it as reviewed.
 
 Fast path: for small "Choosing between known options" issues, one frame-check and one evidence pass may be enough.
 
 For "Probing the unknown" issues, do at least one human checkpoint before the doc contains a final recommendation.
 
-The user in this chat is the decision-owner unless the issue says otherwise.
+Do not substitute another participant's agreement for the named decision owner's signoff.
 
 ## Final Artifact
 
