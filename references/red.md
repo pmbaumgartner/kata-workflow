@@ -54,7 +54,7 @@ Red closure must include:
 - brief `--message` naming what changed
 - committed work, unless the user explicitly declared otherwise
 - `--commit <sha>` for the commit containing the completed work, unless the user explicitly declared otherwise
-- `--test "<cmd>"` for each verification command that passed
+- one `--evidence "test:<cmd>"` per verification command that passed; use `--test "<cmd>"` only when there is exactly one
 - skipped or unavailable checks documented in reviewed docs/artifacts when they
   affect future work
 - `--reviewed <path>` for every deliverable path
@@ -73,8 +73,8 @@ Example:
 kata close abc4 --done \
   --message "Added ANN recall gates." \
   --commit <sha> \
-  --test "cargo test" \
-  --test "uv run pytest" \
+  --evidence "test:cargo test" \
+  --evidence "test:uv run pytest" \
   --reviewed tests/test_ann_recall.py \
   --reviewed examples/ann_benchmark.rs \
   --agent

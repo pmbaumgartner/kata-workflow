@@ -1,8 +1,8 @@
 ---
 name: kata-workflow
-description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose next work from, close kata issues, translate markdown plans into linked kata issue sets, or run autonomous reversible work with agent-owned decisions; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
+description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose the next kata issue, close kata issues, translate markdown plans into linked kata issue sets, or run autonomous reversible work with agent-owned decisions; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
 metadata:
-  kata-version: "0.10.0"
+  kata-developed-against: "0.10.0"
 ---
 
 # Kata Workflow
@@ -12,6 +12,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 ## First Moves
 
 - Run `kata quickstart` when entering an unfamiliar kata workspace or after a kata upgrade.
+- Treat the installed `kata quickstart` as normative for kata operating rules and `kata <command> --help` as normative for command syntax; the safety and Blue/Red rules here are additional. If an example differs from the installed CLI, follow the installed contract and report the drift before mutating.
 - Use `kata next --unowned --agent` when asked to take one new issue; it selects the highest-priority ready issue but does not claim it. Use `kata ready --unowned --agent` to inspect or compare the queue. In Human mode, claim after the user chooses; in Agent mode, choose and claim without waiting. Use an owner filter when resuming assigned work.
 - Use `kata list --status all --agent` for concise orientation; omit `--agent` when the rendered parent/child tree is useful. Use `kata show <ref> --agent` and `kata search "<term>" --agent` for detail.
 - Do not `delete` or `purge` unless the user explicitly asks for that exact destructive action and ref.
@@ -48,9 +49,9 @@ For Agent mode, read [references/agent-mode.md](references/agent-mode.md).
 ## Refs And Invocation
 
 - Refs are short IDs derived from ULIDs, such as `abc4`. Cross-project refs look like `kata#abc4`. Full ULIDs also resolve. Legacy numeric refs do not.
-- This workflow expects kata v0.10.0 or newer. Check `kata version` if `next`, `wait`, `--agent`, `claim`, or the documented filters are missing; report a stale CLI instead of silently substituting a different workflow.
+- The command examples were developed and checked against kata v0.10.0, recorded as `metadata.kata-developed-against`. Run `kata version`; if required commands or flags are absent, report a stale or drifted CLI instead of silently substituting a different workflow.
 - Commands run against the current workspace unless `--workspace` or `--project` overrides it.
-- Author resolves as `$KATA_AUTHOR` > `$USER` > `git user.name`.
+- Author resolves as `--as` > `$KATA_AUTHOR` > `$USER` > `git config user.name` > `anonymous`.
 - Use `--agent` for concise agent-readable output. Use `--json` only when a script or `jq` projection needs the full structured shape.
 - Use `kata whoami --agent` when actor identity matters. If kata is uninitialized, report that `kata init` is needed.
 - Use `kata daemon status --agent` to diagnose the local daemon and `kata daemon restart --agent` when it needs a clean restart.
@@ -67,7 +68,7 @@ kata label add abc4 safari --agent
 kata edit abc4 --blocks d4ex --agent
 ```
 
-If lexical search misses a likely match and `[search.embeddings]` is configured, retry with `kata search "<term>" --hybrid --agent`. Without embeddings, hybrid and semantic search fail validation; keep lexical search and vary the query instead.
+By default, `kata search` is lexical without embeddings and automatically hybrid when `[search.embeddings]` is configured. Use `--lexical`, `--hybrid`, or `--semantic` only to force a mode. Explicit hybrid and semantic search fail validation without embeddings; keep lexical search and vary the query instead.
 
 ## Relationships
 
@@ -92,7 +93,7 @@ Use typed sugar where possible:
 
 - `commit:<sha>` / `--commit <sha>`
 - `pr:<url>` / `--pr <url>`
-- `test:<cmd>` / `--test "<cmd>"`
+- `test:<cmd>` via repeatable `--evidence "test:<cmd>"`; use `--test "<cmd>"` only when recording one verification command
 - `reviewed-paths:<path>` / `--reviewed <path>`
 - `no-change-audit:<text>` with `--audit-no-change`
 - `duplicate-of:<ref>` via `--duplicate-of <ref>`
@@ -101,6 +102,8 @@ Use typed sugar where possible:
 Do not invent evidence prefixes such as `sanity-check:` or `smoke-test:`. Put manual checks, skipped checks, benchmarks, residual risk, and rationale in the reviewed artifact or a short kata comment.
 
 Every path under `## Deliverables` becomes a `--reviewed <path>` flag. If a deliverable does not get reviewed, either the work is not done or the issue body should be edited before close.
+
+For multiple verification commands, pass one `--evidence "test:<cmd>"` per command. In kata v0.10.0, repeated `--test` flags do not accumulate.
 
 Verify that commit evidence contains the completed work before closing. Do not use the current `HEAD` merely because it is convenient.
 
@@ -113,8 +116,8 @@ kata close abc4 --done --message "Fixed Safari callback double-submit." \
 kata close abc4 --done \
   --message "Fixed Safari callback double-submit." \
   --commit <sha-containing-completed-work> \
-  --test "cargo test" \
-  --test "uv run pytest" \
+  --evidence "test:cargo test" \
+  --evidence "test:uv run pytest" \
   --reviewed docs/corpus_profile.md \
   --agent
 ```
