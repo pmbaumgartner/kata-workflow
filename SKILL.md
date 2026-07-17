@@ -1,6 +1,8 @@
 ---
 name: kata-workflow
 description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose next work from, close kata issues, translate markdown plans into linked kata issue sets, or run autonomous reversible work with agent-owned decisions; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
+metadata:
+  kata-version: "0.10.0"
 ---
 
 # Kata Workflow
@@ -10,8 +12,8 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 ## First Moves
 
 - Run `kata quickstart` when entering an unfamiliar kata workspace or after a kata upgrade.
-- Use `kata ready --unowned --agent` when asked what new work to take next. In Human mode, claim after the user chooses; in Agent mode, choose and claim without waiting. Use an owner filter instead when resuming assigned work.
-- Use `kata list --status all --agent`, `kata show <ref> --agent`, and `kata search "<term>" --agent` to orient.
+- Use `kata next --unowned --agent` when asked to take one new issue; it selects the highest-priority ready issue but does not claim it. Use `kata ready --unowned --agent` to inspect or compare the queue. In Human mode, claim after the user chooses; in Agent mode, choose and claim without waiting. Use an owner filter when resuming assigned work.
+- Use `kata list --status all --agent` for concise orientation; omit `--agent` when the rendered parent/child tree is useful. Use `kata show <ref> --agent` and `kata search "<term>" --agent` for detail.
 - Do not `delete` or `purge` unless the user explicitly asks for that exact destructive action and ref.
 - Keep local scratch state such as `.scratch/` untracked and out of code indexes unless the project explicitly says otherwise.
 
@@ -22,6 +24,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 - Close verified Red work promptly.
 - Close Blue work only after explicit signoff from the mode's decision owner: the named human or current user in Human mode, and the primary agent in Agent mode.
 - Use `blocks` / `blocked_by` for real sequencing. Use `related` only for context.
+- Use priority to rank ready work, never as a substitute for a sequencing relationship. Priority `0` is highest.
 - Give every issue exactly one canonical workflow label: `blue` or `red`. Titles make the type visible but do not replace the label.
 - Search before creating. Always pass `--idempotency-key <slug>-<YYYY-MM-DD>` on `kata create`.
 - Treat a failed `kata claim` as a coordination signal. Do not use `--force` unless the user explicitly asks to take ownership from the current owner.
@@ -45,11 +48,12 @@ For Agent mode, read [references/agent-mode.md](references/agent-mode.md).
 ## Refs And Invocation
 
 - Refs are short IDs derived from ULIDs, such as `abc4`. Cross-project refs look like `kata#abc4`. Full ULIDs also resolve. Legacy numeric refs do not.
-- This workflow expects kata v0.9.0 or newer. Check `kata version` if `--agent`, `claim`, or the documented filters are missing; report a stale CLI instead of silently substituting a different workflow.
+- This workflow expects kata v0.10.0 or newer. Check `kata version` if `next`, `wait`, `--agent`, `claim`, or the documented filters are missing; report a stale CLI instead of silently substituting a different workflow.
 - Commands run against the current workspace unless `--workspace` or `--project` overrides it.
 - Author resolves as `$KATA_AUTHOR` > `$USER` > `git user.name`.
 - Use `--agent` for concise agent-readable output. Use `--json` only when a script or `jq` projection needs the full structured shape.
 - Use `kata whoami --agent` when actor identity matters. If kata is uninitialized, report that `kata init` is needed.
+- Use `kata daemon status --agent` to diagnose the local daemon and `kata daemon restart --agent` when it needs a clean restart.
 
 Common commands:
 
@@ -77,6 +81,8 @@ Relationship flags are framed from the operating issue's point of view:
 Agents use `kata ready --agent`, so weak ordering links make the ready queue less trustworthy.
 
 If Red work depends on a Blue decision, make the Red issue `--blocked-by` the Blue issue. Labels and title verbs do not affect readiness; a missing relationship makes dependent Red work appear ready too early.
+
+Use qualified refs for cross-project links. Federated kata v0.10 projects synchronize those links, so do not mirror dependency state with duplicate issues or comments in both projects.
 
 `--remove-parent <ref>` is strict: the ref must equal the current parent. Other `--remove-*` flags are idempotent.
 
@@ -133,6 +139,7 @@ Parent close is refused while open children remain.
 Use ownership to prevent duplicate work:
 
 ```bash
+kata next --unowned --agent
 kata ready --unowned --agent
 kata claim abc4 --comment "Starting the agreed implementation." --agent
 kata unassign abc4 --comment "Releasing; blocked on a missing fixture." --agent
@@ -149,7 +156,11 @@ The mutation lands first. If the follow-up comment fails, retry with `kata comme
 
 Use `kata label add <ref> needs-review`; `kata edit --label` is not a valid command even if older help text suggests it.
 
-For a long-running or multi-agent session, poll `kata events --after <cursor> --agent` and resume from the returned cursor. Use `kata digest --since 24h --agent` for a human-scale handoff summary. If an issue belongs to the wrong project, preview `kata move <ref> <project> --dry-run --agent`; moving preserves history and links but assigns a new short ref in the target project.
+For scripted fan-out/fan-in, use `kata wait <refs...> --all --timeout <duration> --agent` instead of hand-written polling. Use `--any` to resume after the first issue completes and `--until attention` to resume when a worker records non-OK `work.attention`; always include units such as `30s` or `15m` in durations.
+
+Keep narrative scope and status in bodies, comments, labels, and artifacts. Use `kata meta get/set/unset` only for machine-readable coordination state; preserve the `work.*` namespace for kata's work conventions.
+
+For a long-running or multi-agent session, poll `kata events --after <cursor> --agent` and resume from the returned cursor, or use `kata events --tail --agent` for a live stream. Use `kata digest --since 24h --agent` for a human-scale handoff summary. If an issue belongs to the wrong project, preview `kata move <ref> <project> --dry-run --agent`; moving preserves history and links but assigns a new short ref in the target project.
 
 ## Blue Or Red
 
@@ -186,11 +197,11 @@ Use the robust flow: coordinator draft, pre-mortem plus modularity review, unlin
 
 When the user asks what to work on next:
 
-1. Run `kata ready --unowned --agent`. It returns unclaimed open issues with no open `blocks` predecessor.
-2. Inspect unfamiliar structure with `kata show <root-ref> --agent`.
-3. Prefer upstream feeders and work without a stakeholder loop.
-4. Treat both Blue and Red results as eligible. If a Red issue still needs a Blue decision, fix the missing relationship instead of relying on type preference.
-5. Recommend one issue and the tradeoff in 1-3 sentences.
+1. Run `kata next --unowned --agent`. It returns the highest-priority unclaimed open issue with no open `blocks` predecessor; it does not claim it.
+2. If selection needs comparison, run `kata ready --unowned --agent`. Inspect unfamiliar hierarchy with the rendered `kata list --status all` tree and `kata show <root-ref> --agent`.
+3. Prefer upstream feeders and work without a stakeholder loop when priority is otherwise close.
+4. Treat both Blue and Red results as eligible. If a Red issue still needs a Blue decision, fix the missing relationship instead of relying on type preference or priority.
+5. Recommend or select one issue and state the tradeoff in 1-3 sentences.
    - In Human mode, do not claim or start until the user agrees.
    - In Agent mode, record the choice and tradeoff, then claim and start without waiting.
 
