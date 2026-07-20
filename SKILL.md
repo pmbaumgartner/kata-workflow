@@ -23,7 +23,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 - Do not false-close. Closing asserts the work is verified.
 - If work is incomplete, leave it open, add `needs-review` if useful, and comment with what was attempted and what remains.
 - Close verified Red work promptly.
-- Close Blue work only after explicit signoff from the mode's decision owner: the named human or current user in Human mode, and the primary agent in Agent mode.
+- Close Blue work only after recording the mode-appropriate decision: agent intent for nonconsequential Human-mode work, explicit human choice for consequential Human-mode work, and primary-agent signoff in Agent mode.
 - Use `blocks` / `blocked_by` for real sequencing. Use `related` only for context.
 - Use priority to rank ready work, never as a substitute for a sequencing relationship. Priority `0` is highest.
 - Give every issue exactly one canonical workflow label: `blue` or `red`. Titles make the type visible but do not replace the label.
@@ -37,8 +37,10 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 
 Use exactly one decision mode for a goal or root issue:
 
-- Human mode is the default. The current user owns frame checks, unresolved questions, and Blue signoff.
+- Human mode is the default. For nonconsequential decisions within the authorized goal, the primary agent states intent, decides, and proceeds. For consequential decisions, the agent presents viable alternatives, tradeoffs, and a recommendation, then pauses once for the current user to choose.
 - Agent mode requires explicit user delegation for reversible, non-production work. The primary agent owns decisions, records signoff, closes Blue issues, and reports decisions at the end without waiting for human checkpoints.
+
+A Blue decision is consequential when a wrong choice could cause material harm, establish a durable dependency or precedent, commit significant downstream work, or require more than a local correction to reverse. Uncertainty alone does not make a decision consequential; it increases the evidence required.
 
 Record Agent mode and its authority source in the root issue or a reviewed project policy. Child issues inherit that mode unless the user explicitly changes it. Activating a Goal alone does not select Agent mode or expand action permissions.
 

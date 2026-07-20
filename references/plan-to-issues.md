@@ -14,7 +14,7 @@ Use this workflow when translating a large markdown plan, or several smaller pla
 2. Pre-mortem and modularity review:
    - Before creating issues, assume the issue set failed to deliver the source plan. Name concrete causes.
    - Look for missing issues, oversized issues, hidden dependencies, vague acceptance evidence, unverified code assumptions, missing migrations, missing rollback/observability/tests, and material scope, acceptance, policy, or settled-decision changes buried inside Red work.
-   - Convert each material risk into an issue split, issue edit, relationship candidate, new Blue issue, or decision. Ask the user in Human mode; decide and record assumptions in Agent mode.
+   - Convert each material risk into an issue split, issue edit, relationship candidate, new Blue issue, or decision. Route decisions through the Blue workflow's consequential/nonconsequential protocol; do not add another checkpoint.
    - Apply the Lego rule: prefer small, repeatable, independently verified ship units.
    - Favor vertical slices over layer-only tasks. For each Red issue ask: smallest useful ship unit, independent verification, stable interface, and whether later work can repeat the pattern.
 

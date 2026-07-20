@@ -22,16 +22,16 @@ Required fields:
 - `## Decision Mode` - `Human`, or `Agent` with the inherited authority source; omitted means Human
 - `## Question` - the decision or unknown to resolve
 - `## Context` - selected context, not a full history
-- `## Decision Stakes` - consequence, reversibility, and uncertainty; use these to scale evidence and ceremony
+- `## Decision Stakes` - `Consequential: Yes | No - <brief rationale>`, using the definition in SKILL.md
 - `## Approach` - how to investigate
 - `## Exit Criteria` - what makes the decision settled
 
 Use one of two recording scales:
 
-- Inline Blue - for a small, reversible decision local to one issue. Record the frame, evidence, recommendation, and signoff in the issue body or a short comment. A separate artifact and `## Deliverables` block are not required.
+- Inline Blue - for a small, reversible decision local to one issue. Record the frame, evidence, decision, and who decided in the issue body or a short comment. A separate artifact and `## Deliverables` block are not required.
 - Artifact Blue - for a decision that is expensive to reverse, affects multiple issues, establishes reusable policy, or needs durable evidence beyond the issue record. Add `## Decision Artifact` and `## Deliverables` fields and use a repo document such as `docs/<slug>.md`.
 
-In Human mode, use the decision owner named by the issue or project and default to the current user. In Agent mode, the primary agent is the decision owner; other agents may advise or review but do not sign off.
+In Human mode, the primary agent decides nonconsequential Blue work by intent; the decision owner named by the issue or project, defaulting to the current user, decides consequential Blue work. In Agent mode, the primary agent is the decision owner.
 Prefer `docs/<slug>.md` for Artifact Blue unless the project has another convention.
 
 ## Decision Frame
@@ -51,6 +51,7 @@ created: YYYY-MM-DD
 **Decision to make:**
 **Why now / higher-level goal:**
 **Goal check:**
+**Consequential:** Yes | No - <brief rationale>
 **Evaluation criteria:**
 **Hypotheses / options:**
 **Evidence needed:**
@@ -64,24 +65,28 @@ Do not rush to a final recommendation in the first draft.
 
 1. Read the issue body, parent, links, and existing docs.
 2. Draft the decision frame in the issue for Inline Blue or at the artifact path for Artifact Blue.
-3. Frame-check the higher-level goal, criteria, and hypotheses.
-   - In Human mode, pause and iterate with the decision owner until they confirm proceeding.
-   - In Agent mode, audit the frame against the delegated goal and continue without pausing.
-4. Diverge: explore plausible options in proportion to the stakes; include likely losers when they could materially challenge the recommendation.
-5. Converge: gather evidence and rank options against the criteria.
-6. Keep `## Open questions` ordered by what blocks the decision.
-   - In Human mode, minibatch 1-3 questions from the top and iterate with the relevant participants.
-   - In Agent mode, resolve questions through evidence or documented assumptions; do not send them to the human for approval.
-7. Before signoff, ask what would make the recommendation wrong.
-8. Record explicit decision-owner signoff in the selected issue or artifact location. Human mode requires the human owner's response; Agent mode uses the signoff defined in agent-mode.md.
-9. Create necessary follow up issues.
-10. Finalize the decision record. For Artifact Blue, mark the artifact as reviewed, then close.
+3. Classify the decision as consequential or nonconsequential. Pause early only when scope or authority is unclear.
+4. Investigate and compare plausible alternatives in proportion to the stakes. Resolve researchable questions with evidence; in Agent mode, document any remaining assumptions.
+5. Identify the strongest credible alternative and what evidence would change the recommendation.
+6. Decide:
+   - In Human mode, state intent and decide nonconsequential work without a checkpoint.
+   - In Human mode, present consequential work in the format below and pause once for the human decision owner.
+   - In Agent mode, choose without a human checkpoint and use the signoff in agent-mode.md.
+7. Record the decision and who decided, then create necessary follow-up issues.
+8. Finalize the decision record. For Artifact Blue, mark the artifact as reviewed, then close.
 
-Fast path: for low-consequence, easily reversible Inline Blue issues, one frame-check and one proportionate evidence pass may be enough.
+For a consequential Human-mode decision, present:
 
-When uncertainty or consequence is high, Human mode requires at least one human checkpoint before the decision record contains a final recommendation. Agent mode requires an adversarial review instead.
+```md
+## Decision Needed
 
-Do not substitute another participant's agreement for the named decision owner's signoff. In Agent mode, advice or review from another agent does not replace primary-agent signoff.
+- **Option A:** <tradeoff>
+- **Option B:** <tradeoff>
+- **Recommendation:** <choice and reason>
+- **What would change the recommendation:** <evidence, or none>
+```
+
+Use 2-3 viable options when they exist; do not invent alternatives. High uncertainty scales investigation but does not by itself require a human checkpoint. For nonconsequential Inline Blue work, one proportionate evidence pass and recorded intent may be enough.
 
 ## Final Record
 
@@ -89,6 +94,7 @@ After evidence and mode-appropriate calibration, convert the frame into the fina
 
 ```md
 **Finding:** 1-3 sentences.
+**Decision:** The chosen option and who decided.
 **Recommendation:** What next? Link follow-up Red/Blue issues.
 **Confidence:** High / Medium / Low - what would raise it?
 **Evidence:** Commands, benchmarks, docs, upstream behavior, links.
@@ -107,7 +113,7 @@ If a question needs new investigation, open a child Blue issue and mark the curr
 Blue closure must include:
 
 - brief `--message` naming the settled decision
-- explicit decision-owner signoff in the issue, artifact, or a short kata comment
+- mode-appropriate decision recorded in the issue, artifact, or a short kata comment: agent intent for nonconsequential Human-mode work, explicit human choice for consequential Human-mode work, or primary-agent signoff in Agent mode
 - `--reviewed <path>` for Artifact Blue; omit it for Inline Blue unless another deliverable exists
 - `--commit <sha>` when there is a relevant commit, but do not require one just to close Blue work
 - follow-up issues listed in the decision record, if opened
@@ -122,4 +128,4 @@ kata close abc4 --done \
   --agent
 ```
 
-In Human mode, agreement to start work is not signoff.
+For consequential Human-mode work, agreement to investigate is not the final decision.
