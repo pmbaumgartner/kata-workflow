@@ -2,7 +2,7 @@
 name: kata-workflow
 description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose the next kata issue, close kata issues, translate markdown plans into linked kata issue sets, or run autonomous reversible work with agent-owned decisions; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
 metadata:
-  kata-developed-against: "0.10.0"
+  kata-developed-against: "0.11.1"
 ---
 
 # Kata Workflow
@@ -51,7 +51,7 @@ For Agent mode, read [references/agent-mode.md](references/agent-mode.md).
 ## Refs And Invocation
 
 - Refs are short IDs derived from ULIDs, such as `abc4`. Cross-project refs look like `kata#abc4`. Full ULIDs also resolve. Legacy numeric refs do not.
-- The command examples were developed and checked against kata v0.10.0, recorded as `metadata.kata-developed-against`. Run `kata version`; if required commands or flags are absent, report a stale or drifted CLI instead of silently substituting a different workflow.
+- The command examples were developed and checked against kata v0.11.1, recorded as `metadata.kata-developed-against`. Run `kata version --json` and inspect `name`, `version`, and `agent_format`; if required commands or flags are absent, report a stale or drifted CLI instead of silently substituting a different workflow.
 - Commands run against the current workspace unless `--workspace` or `--project` overrides it.
 - Author resolves as `--as` > `$KATA_AUTHOR` > `$USER` > `git config user.name` > `anonymous`.
 - Use `--agent` for concise agent-readable output. Use `--json` only when a script or `jq` projection needs the full structured shape.
@@ -85,7 +85,7 @@ Agents use `kata ready --agent`, so weak ordering links make the ready queue les
 
 If Red work depends on a Blue decision, make the Red issue `--blocked-by` the Blue issue. Labels and title verbs do not affect readiness; a missing relationship makes dependent Red work appear ready too early.
 
-Use qualified refs for cross-project links. Federated kata v0.10 projects synchronize those links, so do not mirror dependency state with duplicate issues or comments in both projects.
+Use qualified refs for cross-project links. Federated projects synchronize those links, so do not mirror dependency state with duplicate issues or comments in both projects.
 
 `--remove-parent <ref>` is strict: the ref must equal the current parent. Other `--remove-*` flags are idempotent.
 
@@ -105,7 +105,7 @@ Do not invent evidence prefixes such as `sanity-check:` or `smoke-test:`. Put ma
 
 Every path under `## Deliverables` becomes a `--reviewed <path>` flag. If a deliverable does not get reviewed, either the work is not done or the issue body should be edited before close.
 
-For multiple verification commands, pass one `--evidence "test:<cmd>"` per command. In kata v0.10.0, repeated `--test` flags do not accumulate.
+For multiple verification commands, pass one `--evidence "test:<cmd>"` per command. The `--test` sugar accepts one command; repeated `--test` flags do not accumulate.
 
 Verify that commit evidence contains the completed work before closing. Do not use the current `HEAD` merely because it is convenient.
 
