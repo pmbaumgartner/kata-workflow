@@ -29,10 +29,10 @@ Required fields:
 Use one of two recording scales:
 
 - Inline Blue - for a small, reversible decision local to one issue. Record the frame, evidence, decision, and who decided in the issue body or a short comment. A separate artifact and `## Deliverables` block are not required.
-- Artifact Blue - for a decision that is expensive to reverse, affects multiple issues, establishes reusable policy, or needs durable evidence beyond the issue record. Add `## Decision Artifact` and `## Deliverables` fields and use a repo document such as `docs/<slug>.md`.
+- Artifact Blue - for a decision that is expensive to reverse, affects multiple issues, establishes reusable policy, or needs durable evidence beyond the issue record. Add `## Decision Artifact` and `## Deliverables` fields and record the decision in a document. By default write it under the gitignored `.kata/` directory (see **Artifacts** in SKILL.md); write it to a tracked repo path such as `docs/<slug>.md` only when the user requests durable, version-controlled persistence.
 
 In Human mode, the primary agent decides nonconsequential Blue work by intent; the decision owner named by the issue or project, defaulting to the current user, decides consequential Blue work. In Agent mode, the primary agent is the decision owner.
-Prefer `docs/<slug>.md` for Artifact Blue unless the project has another convention.
+When the user asks for a tracked artifact, prefer `docs/<slug>.md` unless the project has another convention.
 
 ## Decision Frame
 

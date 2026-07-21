@@ -259,6 +259,12 @@ created: YYYY-MM-DD
 ---
 ```
 
+## Artifacts
+
+By default, write any artifacts you produce — drafts, scratch notes, generated docs, logs, evidence files — into the `.kata/` directory, and ensure `.kata/` is ignored by git. Do not persist artifacts to version control unless the user explicitly requests it.
+
+When the user does ask for a durable, version-controlled artifact (for example a reviewed decision doc that a `## Deliverables` block points at), write it to the appropriate tracked repo path with the front matter shown in **Where Things Live**. Absent that request, keep it under `.kata/` and out of the commit.
+
 ## Drafts
 
 Use `.kata/drafts/` for multi-line bodies and comments. Do not use `/tmp/`. Ensure `.kata/` is ignored by git.
