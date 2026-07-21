@@ -81,7 +81,7 @@ Keep goal alignment, evidence, rejected alternatives, and adversarial review in 
 Repeat without human checkpoints:
 
 1. Read the root authority and current issue graph.
-2. Select and claim the best ready issue.
+2. Select and claim the best ready issue; set `work.attention=ok`.
 3. Complete Blue decisions or Red implementation.
 4. Verify, sign off, and close completed work.
 5. Reconcile new issues and relationships.

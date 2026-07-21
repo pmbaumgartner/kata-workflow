@@ -13,7 +13,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 
 - Run `kata quickstart` when entering an unfamiliar kata workspace or after a kata upgrade.
 - Treat the installed `kata quickstart` as normative for kata operating rules and `kata <command> --help` as normative for command syntax; the safety and Blue/Red rules here are additional. If an example differs from the installed CLI, follow the installed contract and report the drift before mutating.
-- Use `kata next --unowned --agent` when asked to take one new issue; it selects the highest-priority ready issue but does not claim it. Use `kata ready --unowned --agent` to inspect or compare the queue. In Human mode, claim after the user chooses; in Agent mode, choose and claim without waiting. Use an owner filter when resuming assigned work.
+- To take one new issue, use `kata next --unowned --agent`; to resume assigned work, use an owner filter. See **What's Next** for selection and claim rules.
 - Use `kata list --status all --agent` for concise orientation; omit `--agent` when the rendered parent/child tree is useful. Use `kata show <ref> --agent` and `kata search "<term>" --agent` for detail.
 - Do not `delete` or `purge` unless the user explicitly asks for that exact destructive action and ref.
 - Keep local scratch state such as `.scratch/` untracked and out of code indexes unless the project explicitly says otherwise.
@@ -54,6 +54,7 @@ For Agent mode, read [references/agent-mode.md](references/agent-mode.md).
 - The command examples were developed and checked against kata v0.11.1, recorded as `metadata.kata-developed-against`. Run `kata version --json` and inspect `name`, `version`, and `agent_format`; if required commands or flags are absent, report a stale or drifted CLI instead of silently substituting a different workflow.
 - Commands run against the current workspace unless `--workspace` or `--project` overrides it.
 - Author resolves as `--as` > `$KATA_AUTHOR` > `$USER` > `git config user.name` > `anonymous`.
+- Give every mutating agent in a fan-out a distinct identity via `--as` or `$KATA_AUTHOR`. Attribution is what makes a failed `kata claim`, `kata events`, and audit trustworthy; indistinguishable actors defeat them.
 - Use `--agent` for concise agent-readable output. Use `--json` only when a script or `jq` projection needs the full structured shape.
 - Use `kata whoami --agent` when actor identity matters. If kata is uninitialized, report that `kata init` is needed.
 - Use `kata daemon status --agent` to diagnose the local daemon and `kata daemon restart --agent` when it needs a clean restart.
@@ -165,7 +166,29 @@ For scripted fan-out/fan-in, use `kata wait <refs...> --all --timeout <duration>
 
 Keep narrative scope and status in bodies, comments, labels, and artifacts. Use `kata meta get/set/unset` only for machine-readable coordination state; preserve the `work.*` namespace for kata's work conventions.
 
-For a long-running or multi-agent session, poll `kata events --after <cursor> --agent` and resume from the returned cursor, or use `kata events --tail --agent` for a live stream. Use `kata digest --since 24h --agent` for a human-scale handoff summary. If an issue belongs to the wrong project, preview `kata move <ref> <project> --dry-run --agent`; moving preserves history and links but assigns a new short ref in the target project.
+### Attention Signals
+
+`work.attention` is transient state on an open issue, owned by the one working-agent side. Set it to `ok` on claim. Set `needs-human` or `stuck` with a one-line `work.attention_msg` when work halts. It clears on close.
+
+```bash
+kata meta set abc4 work.attention ok --agent
+kata meta set abc4 work.attention needs-human --agent
+kata meta set abc4 work.attention_msg "Blocked on a missing prod fixture." --agent
+```
+
+The launcher owns `work.branch`. One active side owns an issue: a coordinator reads `work.*` but does not overwrite it, and two writers make the signal unreliable. This is what feeds `kata wait --until attention`.
+
+For a long-running or multi-agent session, poll `kata events --after <cursor> --agent` and resume from the returned cursor, or use `kata events --tail --agent` for a live stream. Use `kata digest --since 24h --agent` for a human-scale handoff summary. Audit coordination with `kata audit closes` and by scanning for force claims, stale ownership, conflicting attention writers, duplicate issues, and weak close messages. If an issue belongs to the wrong project, preview `kata move <ref> <project> --dry-run --agent`; moving preserves history and links but assigns a new short ref in the target project.
+
+## Handoff
+
+Before a pause, context compaction, or session end, for every issue you touched:
+
+- Ensure the owner and `work.attention` signal are truthful.
+- Comment incomplete work with evidence and the next action.
+- Close verified-complete work with typed evidence.
+- Make new dependencies structural `blocks`/`blocked_by` links, not just comments.
+- Report the relevant refs; leave no next steps only in chat.
 
 ## Blue Or Red
 
@@ -256,24 +279,12 @@ Inline `--body "..."` is fine for one-line edits.
 
 ## JSON Gotchas
 
-Do not pipe full JSON to `head`; it can truncate mid-field. Project the fields you need.
+Prefer `--agent` for reading. It already prints the concise projection agents usually want: `ready`/`list` rows as `issue=<ref> title=... labels=...`, `search` hits with `score`/`matched`, and `show` including a `Links:` block.
 
-In `kata show --json`, relationships live at the top level, not under `.issue`. `.issue` carries only scalar fields. Project from the real paths:
+Reach for `--json` only when writing automation that needs a stable machine contract — piping a ref into the next command, projecting fields in bulk, or reading a value `--agent` omits (`author`, exact timestamps, numeric `priority`, the full ULID). Do not regex `--agent` text in scripts; it is not a stability guarantee.
 
-```bash
-kata show <ref> --json | jq '{
-  title:.issue.title, status:.issue.status, body:.issue.body,
-  parent:.parent.short_id,
-  links:[.links[]? | {type, from:.from.short_id, to:.to.short_id}]
-}'
-```
+When you do use `--json`:
 
-Use the right wrapper key:
-
-```bash
-kata ready  --json | jq -r '.issues[]?  | "\(.short_id) \(.title)"'
-kata list   --json | jq -r '.issues[]?  | "\(.short_id) \(.title)"'
-kata search "x" --json | jq -r '.results[]? | "\(.issue.short_id) \(.issue.title) (score=\(.score))"'
-```
-
-`kata search` returns `{issue, score, matched_in}`. If `?` hides expected hits, check the wrapper key before assuming the result set is empty.
+- Do not pipe full JSON to `head`; it can truncate mid-field. Project the field you need with `jq`.
+- Wrapper keys differ: `list`/`ready` return `.issues[]`; `search` returns `.results[]`, each `{issue, score, matched_in}`.
+- In `show --json`, `issue` holds only scalar fields. `links`, `labels`, and `comments` are siblings of `issue`, not nested under it. Project relationships from `.links[]` (`{type, from, to}`), not `.issue`.

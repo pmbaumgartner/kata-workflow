@@ -26,6 +26,8 @@ Red work still permits local implementation judgment. Do not open Blue merely to
 
 ## Workflow
 
+Claim the issue and set `work.attention=ok` before starting. If you pause with work unfinished, set `needs-human` or `stuck` with a `work.attention_msg` and leave a durable comment.
+
 1. Read the issue body and linked decision docs.
 2. Check `Pause Triggers` before broadening scope.
 3. Implement the smallest change that satisfies acceptance criteria.
