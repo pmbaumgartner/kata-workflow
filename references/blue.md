@@ -80,11 +80,17 @@ For a consequential Human-mode decision, present:
 ```md
 ## Decision Needed
 
+- **Decision:** <the choice the human needs to make>
+- **Why this matters now:** <higher-level goal, stakes, and downstream effect>
+- **Decision artifact:** <path or link to the durable record>
+- **Relevant context:** <current state, material evidence, constraints, and uncertainties>
 - **Option A:** <tradeoff>
 - **Option B:** <tradeoff>
 - **Recommendation:** <choice and reason>
 - **What would change the recommendation:** <evidence, or none>
 ```
+
+Make the conversational presentation decision-ready without requiring the human to open the artifact. Reference the artifact as the durable record, not as a substitute for context. Include enough selected context to explain the choice and its consequences while leaving full history and supporting detail in the artifact.
 
 Use 2-3 viable options when they exist; do not invent alternatives. High uncertainty scales investigation but does not by itself require a human checkpoint. For nonconsequential Inline Blue work, one proportionate evidence pass and recorded intent may be enough.
 

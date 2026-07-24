@@ -42,6 +42,8 @@ Use exactly one decision mode for a goal or root issue:
 
 A Blue decision is consequential when a wrong choice could cause material harm, establish a durable dependency or precedent, commit significant downstream work, or require more than a local correction to reverse. Uncertainty alone does not make a decision consequential; it increases the evidence required.
 
+Whenever asking a human to make a Blue decision in conversation, reference the decision artifact but make the message decision-ready on its own. Summarize the decision, why it matters now, the stakes and downstream effect, the evidence and constraints that materially affect the choice, the viable options and tradeoffs, and the recommendation; do not require the human to open the artifact to understand the decision.
+
 Record Agent mode and its authority source in the root issue or a reviewed project policy. Child issues inherit that mode unless the user explicitly changes it. Activating a Goal alone does not select Agent mode or expand action permissions.
 
 In Agent mode, resolve uncertainty with proportionate evidence and documented assumptions. Prefer the smallest, simplest, easiest-to-reverse choice when evidence is close. Defer nonessential branches to follow-up issues and continue other ready work. Only an environmental impossibility or unavailable required authority may stop the goal; ambiguity, competing designs, and low confidence do not.
@@ -220,6 +222,8 @@ When Red work exposes uncertainty that would change scope, acceptance criteria, 
 When translating a large markdown plan, or several smaller plan documents, into kata issues, read [references/plan-to-issues.md](references/plan-to-issues.md).
 
 Use the robust flow: coordinator draft, pre-mortem plus modularity review, unlinked creation, central linking, drift reconciliation, fidelity review. Create issues in parallel when independent agents are available and the coordination overhead is justified; otherwise use the same flow sequentially.
+
+At the end, identify open Blue issues that are unblocked, require an explicit human choice, and block Red issues. If any exist, list the relevant Blue and blocked Red refs and ask whether the user wants to proceed with those decisions first so the Red work can become ready.
 
 ## What's Next
 

@@ -51,4 +51,9 @@ Use this workflow when translating a large markdown plan, or several smaller pla
    - Review additions from issue creation. Keep useful repo-grounded additions. In Human mode, surface speculative additions or unresolved scope questions to the user; in Agent mode, decide or document an assumption.
    - If fidelity is incomplete, edit issues or create missing ones before reporting completion.
 
-Final response: list the created/reused refs, major links added, coverage/fidelity result, handled pre-mortem/drift findings, and additions. In Human mode, include user decisions still needed. In Agent mode, include decisions made, material assumptions, confidence, and reversal paths.
+7. Human decision handoff:
+   - In Human mode, inspect the finalized graph for open Blue issues that are unblocked, require an explicit human choice under the Blue workflow, and block one or more open Red issues.
+   - If any exist, list each Blue ref with a brief decision summary and the Red refs it blocks. Ask whether the user would like to proceed with those Blue decisions first so the dependent Red work can become ready.
+   - Do not start or claim those Blue issues until the user agrees. If none exist, omit the decision-first prompt.
+
+Final response: list the created/reused refs, major links added, coverage/fidelity result, handled pre-mortem/drift findings, and additions. In Human mode, include user decisions still needed and the decision-first offer from step 7 when applicable. In Agent mode, include decisions made, material assumptions, confidence, and reversal paths.
