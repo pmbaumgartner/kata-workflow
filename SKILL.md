@@ -1,8 +1,6 @@
 ---
 name: kata-workflow
 description: Use when an agent needs to inspect, claim, assign, create, update, triage, coordinate, choose the next kata issue, close kata issues, translate markdown plans into linked kata issue sets, or run autonomous reversible work with agent-owned decisions; follow Blue decision workflows and Red implementation workflows, preserve evidence, avoid false-closing, and use kata as the shared issue ledger across projects.
-metadata:
-  kata-developed-against: "0.11.1"
 ---
 
 # Kata Workflow
@@ -15,6 +13,7 @@ Kata is the shared issue ledger. Use it as durable external memory for task scop
 - Treat the installed `kata quickstart` as normative for kata operating rules and `kata <command> --help` as normative for command syntax; the safety and Blue/Red rules here are additional. If an example differs from the installed CLI, follow the installed contract and report the drift before mutating.
 - To take one new issue, use `kata next --unowned --agent`; to resume assigned work, use an owner filter. See **What's Next** for selection and claim rules.
 - Use `kata list --status all --agent` for concise orientation; omit `--agent` when the rendered parent/child tree is useful. Use `kata show <ref> --agent` and `kata search "<term>" --agent` for detail.
+- Use `kata list --all`, `kata ready --all`, or `kata next --all` only when cross-project discovery is intentional. Keep mutations project-scoped and use qualified refs.
 - Do not `delete` or `purge` unless the user explicitly asks for that exact destructive action and ref.
 - Keep local scratch state such as `.scratch/` untracked and out of code indexes unless the project explicitly says otherwise.
 
@@ -51,8 +50,8 @@ For Agent mode, read [references/agent-mode.md](references/agent-mode.md).
 ## Refs And Invocation
 
 - Refs are short IDs derived from ULIDs, such as `abc4`. Cross-project refs look like `kata#abc4`. Full ULIDs also resolve. Legacy numeric refs do not.
-- The command examples were developed and checked against kata v0.11.1, recorded as `metadata.kata-developed-against`. Run `kata version --json` and inspect `name`, `version`, and `agent_format`; if required commands or flags are absent, report a stale or drifted CLI instead of silently substituting a different workflow.
-- Commands run against the current workspace unless `--workspace` or `--project` overrides it.
+- The command examples were checked against Kata v0.14.3 with `kata_api_version: 1` and `agent_format: 1`. Run `kata version --json` and inspect `name`, `version`, `kata_api_version`, and `agent_format`; if required commands or flags are absent, report a stale or drifted CLI instead of silently substituting a different workflow.
+- Project-scoped commands resolve from the current workspace unless `--workspace` or `--project` overrides it. If the workspace has no `.kata.toml` binding, use `--project <name>` or qualified refs; run `kata init` only when binding the workspace is intended.
 - Author resolves as `--as` > `$KATA_AUTHOR` > `$USER` > `git config user.name` > `anonymous`.
 - Give every mutating agent in a fan-out a distinct identity via `--as` or `$KATA_AUTHOR`. Attribution is what makes a failed `kata claim`, `kata events`, and audit trustworthy; indistinguishable actors defeat them.
 - Use `--agent` for concise agent-readable output. Use `--json` only when a script or `jq` projection needs the full structured shape.
@@ -63,6 +62,8 @@ Common commands:
 
 ```bash
 kata search "login race" --agent
+kata search "login race" --label red --no-label needs-review --agent
+kata list --all --status all --label red --agent
 kata create "Fix login race" --body "Observed double-submit in Safari callback." \
   --label red --idempotency-key "login-race-2026-05-02" --agent
 kata show abc4 --agent
@@ -71,7 +72,11 @@ kata label add abc4 safari --agent
 kata edit abc4 --blocks d4ex --agent
 ```
 
-By default, `kata search` is lexical without embeddings and automatically hybrid when `[search.embeddings]` is configured. Use `--lexical`, `--hybrid`, or `--semantic` only to force a mode. Explicit hybrid and semantic search fail validation without embeddings; keep lexical search and vary the query instead.
+`--label` and `--no-label` are repeatable filters. `list`, `ready`, and `next` support cross-project `--all`; `search` remains project-scoped, so pass `--project <name>` when searching outside the bound project.
+
+By default, `kata search` is lexical without embeddings and automatically hybrid when `[search.embeddings]` is configured. Use `--lexical`, `--hybrid`, or `--semantic` only to force a mode. Explicit hybrid and semantic search fail validation without embeddings; keep lexical search and vary the query instead. Use `kata show <ref> --render` only for a human-facing terminal view; redirects, pipelines, `--agent`, and `--json` should stay unrendered.
+
+For human supervision, use `kata tui [<ref>]` or `kata ui [<ref>]`. Use `kata mcp serve` only when configuring a bound project as an MCP server; do not start it ad hoc when the CLI already satisfies the workflow.
 
 ## Relationships
 
@@ -177,6 +182,8 @@ kata meta set abc4 work.attention_msg "Blocked on a missing prod fixture." --age
 ```
 
 The launcher owns `work.branch`. One active side owns an issue: a coordinator reads `work.*` but does not overwrite it, and two writers make the signal unreliable. This is what feeds `kata wait --until attention`.
+
+When initializing a Codex CLI workspace that needs attention wiring, use `kata init --with-codex-hooks`. In v0.14.3 this installs the session-start half; keep end-of-session attention updates in the launcher until Codex exposes a stable session-end hook.
 
 For a long-running or multi-agent session, poll `kata events --after <cursor> --agent` and resume from the returned cursor, or use `kata events --tail --agent` for a live stream. Use `kata digest --since 24h --agent` for a human-scale handoff summary. Audit coordination with `kata audit closes` and by scanning for force claims, stale ownership, conflicting attention writers, duplicate issues, and weak close messages. If an issue belongs to the wrong project, preview `kata move <ref> <project> --dry-run --agent`; moving preserves history and links but assigns a new short ref in the target project.
 
