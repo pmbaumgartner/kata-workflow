@@ -6,7 +6,8 @@ configuring optional interfaces, or diagnosing local operations. The installed
 
 ## Compatibility And Scope
 
-The skill examples were checked against Kata v0.14.3. Verify the binary with
+The skill examples were checked against Kata v0.16.0 with
+`kata_api_version: 1` and `agent_format: 1`. Verify the binary with
 `kata version --json`; inspect `name`, `version`, `kata_api_version`, and
 `agent_format`.
 
@@ -52,9 +53,11 @@ contract. Use `--json` and project with `jq`.
   pipelines, `--agent`, and `--json` should remain unrendered.
 - Use `kata tui [<ref>]` or `kata ui [<ref>]` for human supervision.
 - Use `kata mcp serve` only when configuring a bound project as an MCP server.
-- `kata init --with-codex-hooks` installs Codex CLI attention wiring. In
-  v0.14.3 it installs the session-start half; keep end-of-session updates in the
-  launcher until Codex exposes a stable session-end hook.
+- `kata init --with-codex-hooks` installs the Codex CLI contract and
+  `work.attention` hooks in `.codex/hooks.json`.
+- `kata init` also gitignores `.kata.local.toml`. Use its `[server] url` for a
+  per-workspace remote daemon, `KATA_SERVER` for an environment override, or
+  `--daemon <name>` for a configured daemon.
 
 ## Operations And Less-Common Closes
 
@@ -62,8 +65,10 @@ Use `kata daemon status --agent` for diagnosis and `kata daemon restart
 --agent` only when a clean restart is needed.
 
 For long-running sessions, resume polling with `kata events --after <cursor>
---agent` or stream with `kata events --tail --agent`. Use `kata digest
---since 24h --agent` for a human-scale handoff summary.
+--agent`. If the response reports `reset_required`, discard cached state and
+resume from the returned reset cursor. Stream with `kata events --tail --agent`;
+resume a stream with `--last-event-id <cursor>`. Use `kata digest --since 24h
+--agent` for a human-scale handoff summary.
 
 ```bash
 kata close abc4 --duplicate-of d4ex --message "Same Safari race condition." --agent

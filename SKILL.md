@@ -10,7 +10,7 @@ Use Kata as the shared issue ledger and durable memory for scope, decisions, evi
 ## Start And Scope
 
 - Run `kata quickstart` in an unfamiliar workspace or after an upgrade. Treat it as normative for operating rules and `kata <command> --help` as normative for syntax.
-- Treat examples here as checked against Kata v0.14.3. If the installed CLI drifts, follow its contract and report the mismatch before mutating.
+- Treat examples here as checked against Kata v0.16.0 (`kata_api_version: 1`, `agent_format: 1`). If the installed CLI drifts, follow its contract and report the mismatch before mutating.
 - Resolve project-scoped commands from the workspace, `--workspace`, or `--project`. Without a `.kata.toml` binding, use `--project <name>` or qualified refs; run `kata init` only when binding is intended.
 - Prefer `--agent` for reads and mutations. Use `--json` only for scripts that need the full structured shape.
 - Orient with `kata list --status all --agent`, then inspect with `kata show <ref> --agent` and `kata search "<term>" --agent`.
